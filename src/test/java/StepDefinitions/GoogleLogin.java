@@ -25,7 +25,7 @@ public class GoogleLogin {
     
     @Given("the user navigates to the Zigwheels login options")
     public void the_user_navigates_to_the_Zigwheels_login_options() {
-    	driver = new EdgeDriver();
+    	driver = DriverSetup.getDriver("chrome");
     	driver.manage().window().maximize();
 		driver.get("https://zigwheels.com");
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));

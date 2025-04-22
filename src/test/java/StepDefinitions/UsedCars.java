@@ -19,7 +19,7 @@ public class UsedCars{
 
     @Given("user navigates to used cars page")
     public void user_navigates_to_used_cars_page() {
-    	driver = new EdgeDriver();
+    	driver = DriverSetup.getDriver("chrome");
     	driver.manage().window().maximize();
 		driver.get("https://zigwheels.com");
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));

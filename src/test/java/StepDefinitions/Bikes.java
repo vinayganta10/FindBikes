@@ -22,7 +22,7 @@ public class Bikes{
     
     @Given("Click on new bikes option")
     public void click_on_bikes_option() {
-    	driver = new EdgeDriver();
+    	driver = DriverSetup.getDriver("chrome");
     	driver.manage().window().maximize();
     	driver.get("https://zigwheels.com");
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
@@ -44,7 +44,7 @@ public class Bikes{
     public void set_filters_of_model_and_price() throws InterruptedException{
     	WebElement search = driver.findElement(By.id("make_suggest"));
 		search.sendKeys("Honda");
-		Thread.sleep(1000);
+		Thread.sleep(5000);
 		List<WebElement> l = driver.findElements(By.xpath("//a[text()=\"Honda\"]"));
 		l.get(1).click();
 		Thread.sleep(3000);
