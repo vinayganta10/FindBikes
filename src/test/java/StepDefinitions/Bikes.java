@@ -1,31 +1,25 @@
 package StepDefinitions;
 
-import java.time.Duration;
 import java.util.List;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import io.cucumber.java.Before;
+import POI.DataWriter;
 import io.cucumber.java.en.*;
 
 public class Bikes{
 	private WebDriver driver;
-    private WebDriverWait wait;
     
+    @Given("Navigate to the home page")
+    public void navigate_to_the_home_page() {
+    	driver=DriverSetup.getDriver("chrome");
+    	driver.get("https://zigwheels.com");
+    }
     
     @Given("Click on new bikes option")
     public void click_on_bikes_option() {
-    	driver = DriverSetup.getDriver("chrome");
-    	driver.manage().window().maximize();
-    	driver.get("https://zigwheels.com");
-        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     	WebElement bikes = driver.findElement(By.xpath("//div[@id=\"headerNewVNavWrap\"]//nav//ul//li[3]"));
 		bikes.click();
     }
@@ -57,14 +51,22 @@ public class Bikes{
     }
     
     @Then("all the bikes should be displayed")
-    public void all_the_bikes_should_displayed() throws InterruptedException{
+    public void all_the_bikes_should_displayed() throws Exception{
     	List<WebElement> names = driver.findElements(By.xpath("//strong[@class=\"lnk-hvr block of-hid h-height\"]"));
+    	List<WebElement> prices = driver.findElements(By.xpath("//div[@class='clr-bl p-5']"));
     	JavascriptExecutor js = (JavascriptExecutor)driver;
+    	int i=0;
+    	String[][] data = new String[names.size()][2];
 		for(WebElement ele:names) {
 			js.executeScript("arguments[0].scrollIntoView(true)",ele);
-			System.out.println(ele.getText());
+			String name = ele.getText();
+			String price = prices.get(i).getText();
+			data[i][0]=name;
+			data[i][1]=price;
 			Thread.sleep(3000);
+			i++;
 		}
+		DataWriter.write("C:\\Users\\2389116\\eclipse-workspace\\NewBikes\\output\\bikes.xlsx",data);
 		driver.quit();
     }
 }

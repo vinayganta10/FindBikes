@@ -5,15 +5,10 @@ import java.util.Set;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
-
 import io.cucumber.java.en.*;
-import io.cucumber.java.After;
-import io.cucumber.java.Before;
 
 
 public class GoogleLogin {
@@ -39,7 +34,6 @@ public class GoogleLogin {
     		wait.until(ExpectedConditions.presenceOfElementLocated(By.className("googleSignIn"))).click();
 
             originalWindow = driver.getWindowHandle();
-            wait.until(ExpectedConditions.numberOfWindowsToBe(2));
             Set<String> windowHandles = driver.getWindowHandles();
             for (String handle : windowHandles) {
                 if (!handle.equals(originalWindow)) {
@@ -75,15 +69,8 @@ public class GoogleLogin {
     public void the_user_should_observe_a_warning_message(String expectedMessage1) {
         String actualMessage = errorMessage.getText();
         Assert.assertTrue(actualMessage.equals(expectedMessage1) || actualMessage.equals("This browser or app may not be secure."));
-        driver.close();
 		driver.quit();
     }
-    
-//	@After
-//	public void tearDown() {
-//		driver.close();
-//		driver.quit();
-//	}
 
 	private void enterEmail(String email) {
         WebElement emailField = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("identifierId")));

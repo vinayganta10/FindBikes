@@ -1,12 +1,10 @@
 package StepDefinitions;
 
 import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.support.ui.*;
 import org.testng.Assert;
-import io.cucumber.java.Before;
-import io.cucumber.java.After;
+
+import POI.DataWriter;
 import io.cucumber.java.en.*;
 
 import java.time.Duration;
@@ -14,19 +12,18 @@ import java.util.List;
 
 public class UsedCars{
     private WebDriver driver;
-    private WebDriverWait wait;
     
-
-    @Given("user navigates to used cars page")
+    @Given("user navigates to home page")
+    public void user_navigates_to_home_page() {
+    	driver=DriverSetup.getDriver("chrome");
+    	driver.get("https://zigwheels.com");
+    }
+    
+    @And("user navigates to used cars page")
     public void user_navigates_to_used_cars_page() {
-    	driver = DriverSetup.getDriver("chrome");
-    	driver.manage().window().maximize();
-		driver.get("https://zigwheels.com");
-        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         driver.findElement(By.cssSelector("span.c-p.icon-down-arrow")).click();
         driver.findElement(By.cssSelector("a[data-track-label='nav-used-car']")).click();
         Assert.assertTrue(driver.getCurrentUrl().contains("used-car"), "Failed to select used cars.");
-        
     }
 
     @When("user selects chennai location")
@@ -39,15 +36,19 @@ public class UsedCars{
     }
 
     @Then("all the car models should be displayed")
-    public void all_the_car_models_should_be_displayed() {
+    public void all_the_car_models_should_be_displayed() throws Exception{
         List<WebElement> checkboxes = driver.findElements(By.cssSelector("input.carmmCheck"));
         Assert.assertFalse(checkboxes.isEmpty(), "No popular models found.");
+        String[][] data = new String[checkboxes.size()][2];
+        int i=0;
         for (WebElement checkbox : checkboxes) {
-            System.out.println("Model: " + checkbox.getAttribute("car_name"));
+            System.out.println("Model: " + checkbox.getDomAttribute("car_name"));
+            data[i][0]="Model "+(i+1);
+            data[i][1]=checkbox.getDomAttribute("car_name");
+            i++;
         }
+        DataWriter.write("C:\\Users\\2389116\\eclipse-workspace\\NewBikes\\output\\cars.xlsx",data);
         driver.quit();
     }
-
-
 }
 
